@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mybatis.mapper.UserMapper">
+
+    <select id="getById" parameterType="java.lang.Long" resultType="User">
+        select * from users where id_user=#{id}
+    </select>
+
+    <select id="getAll" resultType="User">
+        select * from users
+    </select>
+
+    <insert id="save" parameterType="User">
+        INSERT INTO users (fname, lname, age) VALUES(#{fname}, #{lname}, #{age})
+    </insert>
+
+    <update id="update">
+        UPDATE users
+        <set>
+            <if test="fname != null">fname=#{fname},</if>
+            <if test="lname != null">lname=#{lname},</if>
+            <if test="age != null">age=#{age}</if>
+        </set>
+        WHERE id_user=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM users WHERE id_user = #{id}
+    </delete>
+
+
+    <resultMap id="usersResult" type="User">
+        <id property="id_user" column="id_user"/>
+        <result property="fname" column="fname"/>
+        <result property="lname" column="lname"/>
+        <result property="age" column="age"/>
+        <collection  property="cars"  ofType="Car">
+            <id property="id_car" column="id_car" />
+            <result property="brand" column="brand"/>
+            <result property="horsepower" column="horsepower"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="getAllWithCars" resultMap="usersResult">
+		SELECT
+         USERS.id_user,
+         fname,
+         lname,
+         age,
+         CAR.id_car,
+         brand,
+         horsepower
+        FROM USERS
+         LEFT JOIN USERS_CAR
+          ON USERS.ID_USER = USERS_CAR.ID_USER
+         LEFT JOIN CAR
+          ON USERS_CAR.ID_CAR = CAR.ID_CAR;
+	</select>
+
+    <insert id="buyCar">
+        INSERT INTO users_car VALUES(#{id_user}, #{id_car})
+    </insert>
+
+    <delete id="sellCar">
+        DELETE FROM users_car WHERE id_user=#{id_user} AND id_car=#{id_car}
+    </delete>
+
+    <select id="isBelonging" resultType="java.lang.Integer">
+        SELECT count(*) FROM users_car WHERE id_user=#{id}
+    </select>
+
+</mapper>
