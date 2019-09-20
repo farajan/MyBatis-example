@@ -1,6 +1,6 @@
 package com.example.mybatis.controller;
 
-import com.example.mybatis.model.db.Car;
+import com.example.mybatis.db.entity.Car;
 import com.example.mybatis.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +33,8 @@ public class CarController {
      * @param id An id of a car.
      * @return A car.
      */
-    @RequestMapping(value = "/getById", method = RequestMethod.GET)
-    public Car getById(@RequestParam("id") Long id) {
+    @RequestMapping(value = "/getById/{id}", method = RequestMethod.GET)
+    public Car getById(@PathVariable Long id) {
         return carService.getById(id);
     }
 
@@ -44,7 +44,7 @@ public class CarController {
      * @param ids A List of ids.
      * @return A List of cars.
      */
-    @RequestMapping(value = "/getCarsByIds", method = RequestMethod.POST)
+    @RequestMapping(value = "/getCarsByIds", method = RequestMethod.GET)
     public List<Car> getCarsByIds(@RequestBody List<Integer> ids) {
         return carService.getCarsByIds(ids);
     }
@@ -53,21 +53,21 @@ public class CarController {
      * This method provides save a car to the database.
      *
      * @param car A new car which will be saved.
-     * @return A number of a records which were successfully saved.
+     * @return A car which was saved to database.
      */
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public Integer save(@RequestBody Car car) {
-        return carService.save(car);
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public Car create(@RequestBody Car car) {
+        return carService.create(car);
     }
 
     /**
      * This function updates parameters of a car in the database.
      *
      * @param car A car with new parameters.
-     * @return A number of a records which were successfully saved.
+     * @return A updated car.
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Integer update(@RequestBody Car car) {
+    public Car update(@RequestBody Car car) {
         return carService.update(car);
     }
 
@@ -77,8 +77,8 @@ public class CarController {
      * @param id An id of a car which will be deleted.
      * @return A number of a records which were successfully saved.
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public Integer delete(@RequestParam("id") Long id) {
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+    public Integer delete(@PathVariable Long id) {
         return carService.delete(id);
     }
 

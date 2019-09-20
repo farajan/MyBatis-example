@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.mybatis.mapper.CarMapper">
+<mapper namespace="com.example.mybatis.db.mapper.CarMapper">
 
     <select id="getAll" resultType="Car">
         SELECT * FROM car
@@ -15,29 +15,29 @@
         SELECT *
         FROM car
         WHERE id_car in
-        <foreach item="item" index="index" collection="list"  open="(" separator="," close=")">
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
 
-    <insert id="save" parameterType="Car">
+    <insert id="save" parameterType="Car" useGeneratedKeys="true" keyProperty="id_car" keyColumn="id_car">
         INSERT INTO car (brand, horsepower) VALUES(#{brand}, #{horsepower})
     </insert>
 
-    <update id="update">
+    <update id="update" parameterType="Car">
         UPDATE car
         <set>
             <if test="brand != null">brand=#{brand},</if>
             <if test="horsepower != null">horsepower=#{horsepower}</if>
         </set>
-        WHERE id_car=#{id}
+        WHERE id_car=#{id_car}
     </update>
 
     <delete id="delete" parameterType="java.lang.Long">
         DELETE FROM car WHERE id_car=#{id}
     </delete>
 
-    <select id="isBelonging" resultType="java.lang.Integer">
+    <select id="isBelonging" parameterType="java.lang.Long" resultType="java.lang.Integer">
         SELECT count(*) FROM users_car WHERE id_car=#{id}
     </select>
 

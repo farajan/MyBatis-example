@@ -11,16 +11,13 @@
     </settings>
 
     <typeAliases>
-        <package name="com.example.mybatis.model.db"/>
+        <package name="com.example.mybatis.db.entity"/>
     </typeAliases>
 
     <mappers>
-        <!--<package name="mapper"/>-->
         <mapper resource="mapper/UserMapper.xml"/>
         <mapper resource="mapper/CarMapper.xml"/>
-        <!--<mapper resource="mapper/opening-day-mapper.xml"/>-->
     </mappers>
-
 
 
 </configuration>

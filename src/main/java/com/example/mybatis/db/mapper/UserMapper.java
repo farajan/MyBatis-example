@@ -1,8 +1,7 @@
-package com.example.mybatis.mapper;
+package com.example.mybatis.db.mapper;
 
-import com.example.mybatis.model.db.User;
+import com.example.mybatis.db.entity.User;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -40,23 +39,18 @@ public interface UserMapper {
     /**
      * This function saves user to the database.
      *
-     * @param fname A first name of a new user. This parameter can't be null.
-     * @param lname A last name of a new user. This parameter can't be null.
-     * @param age A age of a new user. This parameter can be null.
+     * @param user A new user. This parameter can't be null.
      * @return A number of records which were successfully saved.
      */
-    Integer save(@Param("fname") String fname, @Param("lname") String lname, @Param("age") Integer age);
+    Integer save(User user);
 
     /**
      * This function update user record in the database.
      *
-     * @param id An id of the user which will be updated. This parameter can't be null.
-     * @param fname A new first name of the user. This parameter can be null.
-     * @param lname A new last name of the user. This parameter can be null.
-     * @param age A new age of the user. This parameter can be null.
+     * @param user A user with new parameters. This parameter can't be null.
      * @return A number of records which were successfully updated.
      */
-    Integer update(@Param("id") Long id, @Param("fname") String fname, @Param("lname") String lname, @Param("age") Integer age);
+    Integer update(User user);
 
     /**
      * This function deletes specific user in the database.
@@ -70,19 +64,19 @@ public interface UserMapper {
      * This function assigns a car to a user ownership.
      *
      * @param id_user An id of a user who will own a new car. This parameter can't be null
-     * @param id_car An id of a car which a user will own. This parameter can't be null
+     * @param id_car  An id of a car which a user will own. This parameter can't be null
      * @return A number of record which were successfully inserted.
      */
-    Integer buyCar(@Param("id_user") Long id_user, @Param("id_car") Long id_car);
+    Integer buyCar(Long id_user, Long id_car);
 
     /**
      * This function remove a car for user ownership.
      *
      * @param id_user An id of a user who will be removed the car from. This parameter can't be null
-     * @param id_car id of a car which will be deleted. This parameter can't be null
+     * @param id_car  id of a car which will be deleted. This parameter can't be null
      * @return A number of record which were successfully deleted.
      */
-    Integer sellCar(@Param("id_user") Long id_user, @Param("id_car") Long id_car);
+    Integer sellCar(Long id_user, Long id_car);
 
     /**
      * This function checks if a user have some cars.

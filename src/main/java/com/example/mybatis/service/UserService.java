@@ -1,10 +1,9 @@
 package com.example.mybatis.service;
 
-import com.example.mybatis.exception.MyException;
-import com.example.mybatis.mapper.CarMapper;
-import com.example.mybatis.mapper.UserMapper;
-import com.example.mybatis.model.db.User;
-import com.example.mybatis.model.payload.TransferCar;
+import com.example.mybatis.db.mapper.CarMapper;
+import com.example.mybatis.db.mapper.UserMapper;
+import com.example.mybatis.db.entity.User;
+import com.example.mybatis.dto.TransferCarDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,45 +54,28 @@ public class UserService {
      * This function saves a user. Throw exception if first name or last name is null.
      *
      * @param user A new user whi will be saved. This parameter can't be null
-     * @return A number of a records which were successfully saved.
+     * @return A user which was saved to database.
      */
-    public Integer save(User user) {
+    public User create(User user) {
         if (user.getFname() == null || user.getLname() == null) {
-            try {
-                throw new MyException("First name and last name are mandatory");
-            } catch (MyException e) {
-                e.printStackTrace();
-                return 0;
-            }
+            throw new IllegalArgumentException("First name and last name are mandatory");
         }
-        return userMapper.save(
-                user.getFname(),
-                user.getLname(),
-                user.getAge()
-        );
+        userMapper.save(user);
+        return user;
     }
 
     /**
      * This function updates a user. Throw exception if id of user is null.
      *
      * @param user A user with new parameters. This parameter can't be null.
-     * @return A number of records which were successfully updated.
+     * @return A updated user.
      */
-    public Integer update(User user) {
-        if(user.getId_user() == null) {
-            try {
-                throw new MyException("User ID is mandatory on update.");
-            } catch (MyException e) {
-                e.printStackTrace();
-                return 0;
-            }
+    public User update(User user) {
+        if (user.getId_user() == null) {
+            throw new IllegalArgumentException("User ID is mandatory on update.");
         }
-        return userMapper.update(
-                user.getId_user(),
-                user.getFname(),
-                user.getLname(),
-                user.getAge()
-        );
+        userMapper.update(user);
+        return getById(user.getId_user());
     }
 
     /**
@@ -103,13 +85,8 @@ public class UserService {
      * @return A number of records which were successfully deleted.
      */
     public Integer delete(Long id) {
-        if(isBelonging(id) != 0) {
-            try {
-                throw new MyException("This user haves some cars.");
-            } catch (MyException e) {
-                e.printStackTrace();
-                return 0;
-            }
+        if (isBelonging(id) != 0) {
+            throw new IllegalArgumentException("This user haves some cars.");
         }
         return userMapper.delete(id);
     }
@@ -118,17 +95,12 @@ public class UserService {
      * This function assigns a car to a user ownership.
      *
      * @param id_user An id of a user who will own a new car. This parameter can't be null
-     * @param id_car An id of a car which a user will own. This parameter can't be null
+     * @param id_car  An id of a car which a user will own. This parameter can't be null
      * @return A number of record which were successfully inserted.
      */
     public Integer buyCar(Long id_user, Long id_car) {
-        if(carMapper.isBelonging(id_car) != 0) {
-            try {
-                throw new MyException("This car belongs someone else.");
-            } catch (MyException e) {
-                e.printStackTrace();
-                return 0;
-            }
+        if (carMapper.isBelonging(id_car) != 0) {
+            throw new IllegalArgumentException("This car belongs someone else.");
         }
         return userMapper.buyCar(id_user, id_car);
     }
@@ -137,7 +109,7 @@ public class UserService {
      * This function remove a car for user ownership.
      *
      * @param id_user An id of a user who will be removed the car from. This parameter can't be null
-     * @param id_car id of a car which will be deleted. This parameter can't be null
+     * @param id_car  id of a car which will be deleted. This parameter can't be null
      * @return A number of record which were successfully deleted.
      */
     public Integer sellCar(Long id_user, Long id_car) {
@@ -147,29 +119,24 @@ public class UserService {
     /**
      * This function transfer a car from a owner to someone else. Throw exception if id of owner or new owner or car is null.
      *
-     * @param transferCar A information about ids of owner, new owner and car.
+     * @param transferCarDto A information about ids of owner, new owner and car.
      * @return A number of record which were successfully added.
      */
     @Transactional
-    public Integer transferCar(TransferCar transferCar) {
-        if(transferCar.getId_seller() == null || transferCar.getId_buyer() == null || transferCar.getId_car() == null) {
-            try {
-                throw new MyException("IDs for seller, buyer and car are mandatory.");
-            } catch (MyException e) {
-                e.printStackTrace();
-                return 0;
-            }
+    public Integer transferCar(TransferCarDto transferCarDto) {
+        if (transferCarDto.getId_seller() == null || transferCarDto.getId_buyer() == null || transferCarDto.getId_car() == null) {
+            throw new IllegalArgumentException("IDs for seller, buyer and car are mandatory.");
         }
         return (
-                userMapper.sellCar(
-                    transferCar.getId_seller(),
-                    transferCar.getId_car()
-                )
-                &
-                userMapper.buyCar(
-                    transferCar.getId_buyer(),
-                    transferCar.getId_car()
-                )
+            userMapper.sellCar(
+                    transferCarDto.getId_seller(),
+                    transferCarDto.getId_car()
+            )
+            &
+            userMapper.buyCar(
+                    transferCarDto.getId_buyer(),
+                    transferCarDto.getId_car()
+            )
         );
 
     }

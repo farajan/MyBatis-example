@@ -1,9 +1,9 @@
-package com.example.mybatis.model.payload;
+package com.example.mybatis.dto;
 
 /**
  * This POJO holds information which is required for a car transfer request.
  */
-public class TransferCar {
+public class TransferCarDto {
 
     private Long id_seller;
 

@@ -1,9 +1,9 @@
 package com.example.mybatis;
 
-import com.example.mybatis.mapper.CarMapper;
-import com.example.mybatis.mapper.UserMapper;
-import com.example.mybatis.model.db.User;
-import com.example.mybatis.model.payload.TransferCar;
+import com.example.mybatis.db.mapper.CarMapper;
+import com.example.mybatis.db.mapper.UserMapper;
+import com.example.mybatis.db.entity.User;
+import com.example.mybatis.dto.TransferCarDto;
 import com.example.mybatis.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,14 +71,14 @@ public class UserServiceTests {
     }
 
     @Test
-    public void save_shouldPass() {
+    public void create_shouldPass() {
         User user = new User();
         user.setFname("test");
         user.setLname("test");
 
-        userMapper.save(user.getFname(), user.getLname(), user.getAge());
+        userService.create(user);
 
-        verify(userMapper, times(1)).save(user.getFname(), user.getLname(), user.getAge());
+        verify(userMapper, times(1)).save(user);
     }
 
     @Test
@@ -87,9 +87,9 @@ public class UserServiceTests {
         user.setFname("test");
         user.setLname("test");
 
-        userMapper.update(user.getId_user(), user.getFname(), user.getLname(), user.getAge());
+        userMapper.update(user);
 
-        verify(userMapper, times(1)).update(user.getId_user(), user.getFname(), user.getLname(), user.getAge());
+        verify(userMapper, times(1)).update(user);
     }
 
     @Test
@@ -112,12 +112,12 @@ public class UserServiceTests {
 
     @Test
     public void transferCar_shouldPass() {
-        TransferCar transferCar = new TransferCar();
-        transferCar.setId_seller(1L);
-        transferCar.setId_buyer(1L);
-        transferCar.setId_car(1L);
+        TransferCarDto transferCarDto = new TransferCarDto();
+        transferCarDto.setId_seller(1L);
+        transferCarDto.setId_buyer(1L);
+        transferCarDto.setId_car(1L);
 
-        userService.transferCar(transferCar);
+        userService.transferCar(transferCarDto);
 
         verify(userMapper, times(1)).sellCar(1L, 1L);
         verify(userMapper, times(1)).buyCar(1L, 1L);

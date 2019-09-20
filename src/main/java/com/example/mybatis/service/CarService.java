@@ -1,8 +1,7 @@
 package com.example.mybatis.service;
 
-import com.example.mybatis.exception.MyException;
-import com.example.mybatis.mapper.CarMapper;
-import com.example.mybatis.model.db.Car;
+import com.example.mybatis.db.mapper.CarMapper;
+import com.example.mybatis.db.entity.Car;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,40 +49,28 @@ public class CarService {
      * This function saves a car. Throw exception if a brand of a car is null.
      *
      * @param car A new car which will be saved. This parameter can't be null
-     * @return A number of a records which were successfully saved.
+     * @return A car which was saved to database.
      */
-    public Integer save(Car car) {
-        if(car.getBrand() == null) {
-            try {
-                throw new MyException("Car must have a brand.");
-            } catch (MyException e) {
-                e.printStackTrace();
-                return 0;
-            }
+    public Car create(Car car) {
+        if (car.getBrand() == null) {
+            throw new IllegalArgumentException("Car must have a brand.");
         }
-        return carMapper.save(car.getBrand(), car.getHorsepower());
+        carMapper.save(car);
+        return car;
     }
 
     /**
      * This function updates a car. Throw exception if a id of car is null.
      *
      * @param car A car with new parameters. This parameter can't be null.
-     * @return A number of records which were successfully updated.
+     * @return A updated car.
      */
-    public Integer update(Car car) {
-        if(car.getId_car() == null) {
-            try {
-                throw new MyException("Car must have a ID.");
-            } catch (MyException e) {
-                e.printStackTrace();
-                return 0;
-            }
+    public Car update(Car car) {
+        if (car.getId_car() == null) {
+            throw new IllegalArgumentException("Car must have a ID.");
         }
-        return carMapper.update(
-                car.getId_car(),
-                car.getBrand(),
-                car.getHorsepower()
-        );
+        carMapper.update(car);
+        return getById(car.getId_car());
     }
 
     /**
@@ -93,13 +80,8 @@ public class CarService {
      * @return A number of records which were successfully deleted.
      */
     public Integer delete(Long id) {
-        if(isBelonging(id) != 0) {
-            try {
-                throw new MyException("This car belong someone.");
-            } catch (MyException e) {
-                e.printStackTrace();
-                return 0;
-            }
+        if (isBelonging(id) != 0) {
+            throw new IllegalArgumentException("This car belong someone.");
         }
         return carMapper.delete(id);
     }

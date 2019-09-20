@@ -1,7 +1,7 @@
 package com.example.mybatis;
 
-import com.example.mybatis.mapper.CarMapper;
-import com.example.mybatis.model.db.Car;
+import com.example.mybatis.db.mapper.CarMapper;
+import com.example.mybatis.db.entity.Car;
 import com.example.mybatis.service.CarService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,12 +71,12 @@ public class CarServiceTests {
     }
 
     @Test
-    public void save_shouldPass() {
+    public void create_shouldPass() {
         Car car = new Car();
         car.setBrand("test");
         car.setHorsepower(0);
-        carService.save(car);
-        verify(carMapper, times(1)).save(car.getBrand(), car.getHorsepower());
+        carService.create(car);
+        verify(carMapper, times(1)).save(car);
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.example.mybatis.model.db;
+package com.example.mybatis.db.entity;
 
 import java.util.List;
 

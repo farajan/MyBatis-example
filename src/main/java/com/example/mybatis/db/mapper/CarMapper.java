@@ -1,8 +1,7 @@
-package com.example.mybatis.mapper;
+package com.example.mybatis.db.mapper;
 
-import com.example.mybatis.model.db.Car;
+import com.example.mybatis.db.entity.Car;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -41,21 +40,18 @@ public interface CarMapper {
     /**
      * This function saves car to the database.
      *
-     * @param brand A brand of a new car. This parameter can't be null.
-     * @param horsepower A horsepower of a new car. This parameter can be null.
+     * @param car A new car. This parameter can't be null.
      * @return A number of records which were successfully saved.
      */
-    Integer save(@Param("brand") String brand, @Param("horsepower") Integer horsepower);
+    Integer save(Car car);
 
     /**
      * This function update car record in the database.
      *
-     * @param id An id of a car which will be updated. This parameter can't be null.
-     * @param brand A new brand of a car. This parameter can be null.
-     * @param horsepower A new horsepower of a car. This parameter can be null.
+     * @param car A car with new parameters. This parameter can't be null.
      * @return A number of records which were successfully updated.
      */
-    Integer update(@Param("id") Long id, @Param("brand") String brand, @Param("horsepower") Integer horsepower);
+    Integer update(Car car);
 
     /**
      * This function deletes specific car in the database.
